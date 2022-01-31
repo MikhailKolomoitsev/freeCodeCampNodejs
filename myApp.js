@@ -45,6 +45,12 @@ app.get('/:word/echo',
     })
   })
 
+app.get('/name',
+  (req, res, next) => {
+    const {first, last} = req.query
+    res.send({ name: `${first} ${last}`})
+  })
+
 
 
 
