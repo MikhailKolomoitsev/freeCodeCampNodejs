@@ -12,6 +12,8 @@ app.use((req, res, next) => {
 
 console.log('Hello World')
 
+
+//routes
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
 })
@@ -23,6 +25,17 @@ app.get('/json', (req, res, next) => {
   }
   res.json({ "message": "Hello json" });
 })
+
+const middleware = (req, res, next) => {
+  req.time = new Date().toString();
+  next()
+}
+app.get('/now', middleware,
+  (req, res, next) => {
+    res.send({
+      time: req.time
+    })
+  })
 
 
 
