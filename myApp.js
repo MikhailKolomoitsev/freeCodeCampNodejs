@@ -16,12 +16,12 @@ const personSchema = new Schema({
 const Person = mongoose.model("Person", personSchema);
 
 const createAndSavePerson = (done) => {
-  let Mikhail = new Person({
+  let mikhail = new Person({
     name: 'Mikhail',
     age: 26,
     favoriteFoods: ['fresh', 'watermelon', 'batat']
   })
-  Mikhail.save((data, error) => {
+  mikhail.save((data, error) => {
     if (error) {
       console.log(error);
     } else {
