@@ -23,7 +23,7 @@ const createAndSavePerson = (done) => {
     favoriteFoods: ['fresh', 'watermelon', 'batat'],
     createdAt: Date.now()
   })
-  mikhail.save((data, error) => {
+  mikhail.save((error, data) => {
     if (error) {
       console.log(error);
     } else {
