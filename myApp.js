@@ -10,7 +10,8 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
 const personSchema = new Schema({
   name: { type: String, required: true },
   age: Number,
-  favoriteFoods: [String]
+  favoriteFoods: [String],
+  createdAt: String
 });
 
 const Person = mongoose.model("Person", personSchema);
@@ -19,7 +20,8 @@ const createAndSavePerson = (done) => {
   let mikhail = new Person({
     name: 'Mikhail',
     age: 26,
-    favoriteFoods: ['fresh', 'watermelon', 'batat']
+    favoriteFoods: ['fresh', 'watermelon', 'batat'],
+    createdAt: Date.now()
   })
   mikhail.save((data, error) => {
     if (error) {
