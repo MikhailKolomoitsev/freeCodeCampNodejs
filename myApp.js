@@ -49,7 +49,15 @@ app.get('/:word/echo',
 app.get('/name',
   (req, res, next) => {
     const {first, last} = req.query
-    res.send({ name: `${first} ${last}`})
+    res.send({ name: `${first} ${last}` })
+    next()
+  })
+
+app.post('/name',
+  (req, res, next) => {
+    const { first, last } = req.body
+    res.json({ name: `${first} ${last}` })
+    next()
   })
 
 
