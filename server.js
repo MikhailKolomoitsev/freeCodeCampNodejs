@@ -31,25 +31,37 @@ app.get("/api/", (req, res) => {
   res.json({ unix: date, utc: utc });
 });
 
-app.get("/api/:date?", function (req, res) {
+app.get("/api/:date?", (req, res) => {
 
-  const date = req.params.date
+  const query = req.params.date
 
-  if (new Date(parseInt(date)).toString() === "Invalid Date") {
+  if (new Date(parseInt(query)).toString() === "Invalid Date") {
+    console.log("In date invalid");
     res.json({ error: "Invalid Date" });
     return;
-  } else if (date.includes('-')) {
-    let unix = new Date(date).getTime();
-    let utc = new Date(date).toUTCString();
-    res.json({ unix: unix, utc: utc });
-  } else {
-    let parse = parseInt(date);
-    let unix = new Date(parse).getTime();
-    let utc = new Date(parse).toUTCString();
-    if (date.length === 13) {
-      res.json({ unix: unix, utc: utc });
-    }
   }
+  /**
+   * API retur convert 
+   */
+  if (query.includes('-')) {
+    //console.log("OK");
+    console.log("DATE-to-UNIX");
+    let unix = new Date(query).getTime();
+    let utc = new Date(query).toUTCString();
+    res.json({ unix: unix, utc: utc });
+  }
+  /**
+   * API return conver 
+   */
+  else {
+    console.log("UNIX-to-DATE");
+    //query = query.valueOf();
+    let parse = parseInt(query);
+    //console.log(parse);
+    let unixTodate = new Date(parse).getTime();
+    let utcToutc = new Date(parse).toUTCString();
+    res.json({ unix: unixTodate, utc: utcToutc });
+  }    
  
 });
 
