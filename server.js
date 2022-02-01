@@ -43,9 +43,9 @@ app.get("/api/:date?", function (req, res) {
     let utc = new Date(date).toUTCString();
     res.json({ unix: unix, utc: utc });
   } else {
-    let parse = parseInt(date);
-    let unix = new Date(parse).getTime();
-    let utc = new Date(parse).toUTCString();
+    let date_string = parseInt(date);
+    let unix = new Date(date_string).getTime();
+    let utc = new Date(date_string).toUTCString();
     if (date.length === 13) {
       res.json({ unix: unix, utc: utc });
     }
