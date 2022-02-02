@@ -1,46 +1,47 @@
-// server.js
-// where your node app starts
-
-// init project
 require('dotenv').config();
-var express = require('express');
-var app = express();
+const bodyParser = require('body-parser')
+const express = require('express');
+const cors = require('cors');
+const app = express();
+const mongoose = require('mongoose');
+const Schema = mongoose.Schema
 
-// enable CORS (https://en.wikipedia.org/wiki/Cross-origin_resource_sharing)
-// so that your API is remotely testable by FCC 
-var cors = require('cors');
-app.use(cors({optionsSuccessStatus: 200}));  // some legacy browsers choke on 204
+// Basic Configuration
+const port = process.env.PORT || 3000;
 
-// http://expressjs.com/en/starter/static-files.html
-app.use(express.static('public'));
+app.use(cors());
 
-// http://expressjs.com/en/starter/basic-routing.html
-app.get("/", function (req, res) {
-  res.sendFile(__dirname + '/views/index.html');
+app.use('/public', express.static(`${process.cwd()}/public`));
+
+app.get('/', function (req, res) {
+  res.sendFile(process.cwd() + '/views/index.html');
+});
+
+// Your first API endpoint
+app.get('/api/hello', function (req, res) {
+  res.json({ greeting: 'hello API' });
 });
 
 
-// your first API endpoint... 
-app.get("/api/hello", function (req, res) {
-  res.json({greeting: 'hello API'});
-});
+mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(console.log('successDB'))
+  .catch(e => console.log(e.message))
 
-app.enable('trust proxy')
-app.get("/api/whoami", function (req, res) {
+let urlSchema = new Schema({
+  origina: { type: String, required: true },
+  short: Number
+})
 
-  const ipaddress = req.ip
-  const language=req.get('Accept-Language')
-  const software=req.get('User-Agent')
-
-  res.json({
-    ipaddress: ipaddress,
-    language: language,
-    software: software
-  });
-});
+let Url = mongoose.model('Url', urlSchema)
+let responseObject = {}
+app.post('/api/shorturl/', bodyParser.urlencoded({ extended: false }), (req, res, next) => {
+  responseObject['original_url']=req.body['url']
+  console.log(req.body);
+  res.json(responseObject)
+})
 
 
-// listen for requests :)
-var listener = app.listen(process.env.PORT || 3001, function () {
-  console.log('Your app is listening on port ' + listener.address().port);
+
+app.listen(port, function () {
+  console.log(`Listening on port ${port}`);
 });
