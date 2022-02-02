@@ -27,14 +27,14 @@ app.get("/api/hello", function (req, res) {
 
 app.enable('trust proxy')
 app.get("/api/whoami", function (req, res) {
-  // const headers = JSON.stringify(req.headers).split(',')
-  // const software = headers[9].split(':')[1].slice(1) + headers[10].slice(0, headers[10].length-1)
-  // const ipaddress = req.headers.connection[2]
-  // const language = headers[0]
+  const headers = JSON.stringify(req.headers).split(',')
+  const software = headers[9].split(':')[1].slice(1) + headers[10].slice(0, headers[10].length-1)
+  const ipaddress = req.ip
+  const language = headers[0]
   res.json({
     ipaddress: req.ip,
-    // language: language,
-    // software: software
+    language: language,
+    software: software
   });
 });
 
