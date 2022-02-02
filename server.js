@@ -32,12 +32,44 @@ let urlSchema = new Schema({
   short: Number
 })
 
-let Url = mongoose.model('Url', urlSchema)
+let urlModel = mongoose.model('URL', urlSchema)
+
 let responseObject = {}
-app.post('/api/shorturl/', bodyParser.urlencoded({ extended: false }), (req, res, next) => {
-  responseObject['original_url']=req.body['url']
-  console.log(req.body);
-  res.json(responseObject)
+app.post('/api/shorturl', bodyParser.urlencoded({ extended: false }), (req, res, next) => {
+  let inputUrl = req.body['url']
+
+  let urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi)
+
+  if (!inputUrl.match(urlRegex)) {
+    res.json({ error: 'Invalid URL' })
+    return
+  }
+
+  responseObject['original_url'] = inputUrl
+
+  let newShort = 1
+
+  urlModel.findOne({})
+    .sort({ short: "desc" })
+    .exec((error, result) => {
+      if (!error && result !== null) {
+        console.log(result);
+        newShort = result.short + 1
+      }
+      if (!error) {
+        urlModel.findOneAndUpdate(
+          { original: inputUrl },
+          { original: inputUrl, short: newShort },
+          { new: true, upsert: true },
+          (err, data) => {
+            if (!err) {
+              responseObject['short_url'] = data.short
+              res.json(responseObject)
+            }
+          }
+        )
+      }
+    })
 })
 
 
