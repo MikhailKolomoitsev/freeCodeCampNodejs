@@ -27,12 +27,13 @@ app.get("/api/hello", function (req, res) {
 
 app.enable('trust proxy')
 app.get("/api/whoami", function (req, res) {
-  const headers = JSON.stringify(req.headers).split(',')
-  const software = headers[9].split(':')[1].slice(1) + headers[10].slice(0, headers[10].length-1)
+
   const ipaddress = req.ip
-  const language = headers[0]
+  const language=req.get('Accept-Language')
+  const software=req.get('User-Agent')
+
   res.json({
-    ipaddress: req.ip,
+    ipaddress: ipaddress,
     language: language,
     software: software
   });
