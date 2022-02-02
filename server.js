@@ -24,18 +24,16 @@ app.get('/api/hello', function (req, res) {
 
 
 mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(console.log('successDB'))
-  .catch(e => console.log(e.message))
 
 let urlSchema = new Schema({
   origina: { type: String, required: true },
   short: Number
 })
 
-let urlModel = mongoose.model('URL', urlSchema)
+let URL = mongoose.model('URL', urlSchema)
 
 let responseObject = {}
-app.post('/api/shorturl', bodyParser.urlencoded({ extended: false }), (req, res, next) => {
+app.post('/api/shorturl', bodyParser.urlencoded({ extended: false }), async(req, res) => {
   let inputUrl = req.body['url']
 
   let urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi)
@@ -49,27 +47,32 @@ app.post('/api/shorturl', bodyParser.urlencoded({ extended: false }), (req, res,
 
   let newShort = 1
 
-  urlModel.findOne({})
-    .sort({ short: "desc" })
-    .exec((error, result) => {
-      if (!error && result !== null) {
-        console.log(result);
-        newShort = result.short + 1
-      }
-      if (!error) {
-        urlModel.findOneAndUpdate(
-          { original: inputUrl },
-          { original: inputUrl, short: newShort },
-          { new: true, upsert: true },
-          (err, data) => {
-            if (!err) {
-              responseObject['short_url'] = data.short
-              res.json(responseObject)
+  try {
+     URL.findOne({})
+      .sort({ short: "desc" })
+      .exec( (error, result) => {
+        if (!error && result != undefined) {
+          console.log(result);
+          newShort = result.short + 1
+        }
+        if (!error) {
+           URL.findOneAndUpdate(
+            { original: inputUrl },
+            { original: inputUrl, short: newShort },
+            { new: true, upsert: true },
+            (err, data) => {
+              if (!err) {
+                responseObject['short_url'] = data.short
+                res.json(responseObject)
+              }
             }
-          }
-        )
-      }
-    })
+          )
+        }
+      })
+  
+} catch (error) {
+  console.log(error.message);
+}
 })
 
 
