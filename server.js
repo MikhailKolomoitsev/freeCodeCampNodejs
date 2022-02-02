@@ -25,7 +25,7 @@ app.get("/api/hello", function (req, res) {
   res.json({greeting: 'hello API'});
 });
 
-app.enable('trust proxy')
+// app.enable('trust proxy')
 app.get("/api/whoami", function (req, res) {
   const headers = JSON.stringify(req.headers).split(',')
   const software = headers[9].split(':')[1].slice(1) + headers[10].slice(0, headers[10].length-1)
