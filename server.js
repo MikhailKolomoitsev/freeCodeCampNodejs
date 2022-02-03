@@ -26,46 +26,46 @@ app.get('/api/hello', function (req, res) {
 mongoose.connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
 
 
-// let urlSchema = new mongoose.Schema({
-//   original: { type: String, required: true },
-//   short: Number
-// })
-// let Url = mongoose.model('Url', urlSchema)
-// let responseObject = {}
-// app.post('/api/shorturl', bodyParser.urlencoded({ extended: false }),  (req, res, next) => {
-//   let inputUrl = req.body['url']
-//   responseObject['original_url'] = inputUrl
+let urlSchema = new mongoose.Schema({
+  original: { type: String, required: true },
+  short: Number
+})
+let Url = mongoose.model('Url', urlSchema)
+let responseObject = {}
+app.post('/api/shorturl', bodyParser.urlencoded({ extended: false }),  (req, res, next) => {
+  let inputUrl = req.body['url']
+  responseObject['original_url'] = inputUrl
 
-//   let urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi)
+  let urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi)
   
-//   if (!inputUrl.match(urlRegex)) {
-//     res.json({ error: 'Invalid URL' })
-//     return
-//   }
+  if (!inputUrl.match(urlRegex)) {
+    res.json({ error: 'Invalid URL' })
+    return
+  }
 
-//   let newShort = 1
+  let newShort = 1
 
-//   Url.findOne({})
-//     .sort({ short: "desc" })
-//     .exec( (error, result) => {
-//       if (!error && result !=undefined) {
-//         newShort = result.short + 1
-//       }
-//       if (!error) {
-//          Url.findOneAndUpdate(
-//           { original: inputUrl },
-//           { original: inputUrl, short: newShort },
-//           { new: true, upsert: true },
-//           (err, data) => {
-//             if (!err) {
-//               responseObject['short_url'] = data.short
-//               res.json(responseObject)
-//             }
-//           }
-//         )
-//       }
-//     })
-// })
+  Url.findOne({})
+    .sort({ short: "desc" })
+    .exec( (error, result) => {
+      if (!error && result !=undefined) {
+        newShort = result.short + 1
+      }
+      if (!error) {
+         Url.findOneAndUpdate(
+          { original: inputUrl },
+          { original: inputUrl, short: newShort },
+          { new: true, upsert: true },
+          (err, data) => {
+            if (!err) {
+              responseObject['short_url'] = data.short
+              res.json(responseObject)
+            }
+          }
+        )
+      }
+    })
+})
 
 
 
