@@ -116,7 +116,7 @@ app.get('/api/users/:id/logs', (req, res) => {
 })
 
 app.get('/api/users', (req, res) => {
-  User.find({username, _id}).exec((err, data) => {
+  User.find().exec((err, data) => {
     if (err || !data) {
       res.send('No users found')
     } else {
