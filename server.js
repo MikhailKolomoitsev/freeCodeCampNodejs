@@ -1,26 +1,20 @@
-import connectiondb from './connectiondb.js';
-import cors from 'cors';
-import express from 'express';
-import router from './routes/index.js';
-import { PORT } from './config.js';
-import { dirname } from 'path';
-import { fileURLToPath } from 'url';
+var express = require('express');
+var cors = require('cors');
+require('dotenv').config()
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-const app = express();
-connectiondb();
+var app = express();
 
 app.use(cors());
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-app.use(express.static('public'));
-app.use('/api', router);
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/views/index.html');
+app.use('/public', express.static(process.cwd() + '/public'));
+
+app.get('/', function (req, res) {
+    res.sendFile(process.cwd() + '/views/index.html');
 });
 
-const listener = app.listen(PORT, () => {
-  console.log('Your app is listening on port ' + listener.address().port);
+
+
+
+const port = process.env.PORT || 3000;
+app.listen(port, function () {
+  console.log('Your app is listening on port ' + port)
 });
