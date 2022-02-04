@@ -1,7 +1,7 @@
 import Exercise from '../models/exercise.js';
 import { getUserByIdAndHandleError } from './user.js';
 
-export const saveExercise = async (req, res) => {
+export const createExercise = async (req, res) => {
   const user = await getUserByIdAndHandleError(req.params._id);
   try {
     const { description, duration, date } = req.body;

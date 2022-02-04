@@ -27,7 +27,7 @@ export const getUsers = async (req, res) => {
   }
 };
 
-export const getUserLogs = async (req, res) => {
+export const getUsersLogs = async (req, res) => {
   const { from, to, limit } = req.query;
   const maxNumberLogs = limit ? limit : Number.MAX_SAFE_INTEGER;
 
